@@ -2,7 +2,6 @@
 
 import os
 import sys
-#files = os.listdir('.') #contains all the files in current directory
 
 groupname = "WeWillSee"
 turnFile = groupname + ".go"
@@ -13,7 +12,7 @@ class Current_state:
         self.position = position
         self.nextMoves = []
 
-class Position:
+class Location:
     def __init__(self, posX, posY):
         self.posX = posX
         self.posY = posY
@@ -21,10 +20,10 @@ class Position:
 
 #This function check if the game ended
 def check_end():
-    for f in files:
+    for f in os.listdir('.'):
          if f == "end_game":
-             return True
-    return False
+             return False
+    return True
 
 
 
@@ -39,11 +38,25 @@ def wait_for_turn():
 
 def main():
 
-    print ("Hello World")
-    wordlist = file.split()
-    
+    # if not our turn and no end_game, then do nothing
+    while wait_for_turn() and check_end():
+        pass
 
-    print ("its our turn")
+    # returns if game ends
+    if check_end() == False:
+        print ("Game has ended")
+        return
+
+
+    #parsing the the move_file, reads the oponent's move
+    file = open("move_file" ,'r')
+    for line in file:
+        wordlist = line.split()
+
+
+
+    print (wordlist)
+
 
 
 if __name__ == "__main__": main()
