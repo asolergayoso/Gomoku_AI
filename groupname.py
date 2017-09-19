@@ -2,22 +2,31 @@
 
 import os
 import sys
+from sys import maxsize
 
+##==========================================================================================
+## GLOBAL VARIABLES
 groupname = "WeWillSee"
 turnFile = groupname + ".go"
-table = [[]]  #create a table
 
-class Current_state:
-    def __init__(self, position):
-        self.position = position
-        self.nextMoves = []
 
-class Location:
-    def __init__(self, posX, posY):
+##==========================================================================================
+##OBJECTS
+class Node():
+    def __init__(self, depth, player, value = 0):
+        self.depth = depth
+        self.value = value
+        self.player = player
+        self.table = []
+        self.children = []
+
+class Table:
+    def __init__(self, posX, posY, occupied):
         self.posX = posX
         self.posY = posY
+        self.occupied = 0 # 0 = empty, -1 = opponent, 1 = our player
 
-
+##============================================================================================
 #This function check if the game ended
 def check_end():
     for f in os.listdir('.'):
@@ -27,7 +36,7 @@ def check_end():
 
 
 
-#tells us if it's our turn
+#wait_for_turn() tells us if it's our turn
 def wait_for_turn():
     for f in os.listdir('.'):
         if f == (turnFile):
@@ -35,7 +44,8 @@ def wait_for_turn():
     return True                 #not our turn
 
 
-
+##=============================================================================================
+#MAIN FUNCTION
 def main():
 
     # if not our turn and no end_game, then do nothing
