@@ -2,10 +2,23 @@
 
 import sys
 
-print ("this is just s test")
+table = [[]]  #create a table
 
-a = 1
+class Current_state:
+    def __init__(self, position):
+        self.position = position
+        self.nextMoves = []
 
-print (a)
+class Position:
+    def __init__(self, posX, posY):
+        self.posX = posX
+        self.posY = posY
+
+
+def main():
+
+    print ("Hello World")
+
+if __name__ == "__main__": main()
 
 
