@@ -1,0 +1,15 @@
+# This function is the min-max algorithm 
+def max_value():
+	if(node.depth = 0):
+		return node.value()
+	for (node.value && node.move) in currentnode.children():
+	v = max(min_value(node.children.move))
+	return v
+
+def min_value():	
+	if(node.depth = 0):
+		return node.value()
+	for (node.value && node.move) in currentnode.children():
+	v = min(max_value(node.children.value))
+	return v
+
