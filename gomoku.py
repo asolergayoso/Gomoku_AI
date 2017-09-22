@@ -36,7 +36,7 @@ class TableBox:
 # #Position Evaualtion Function to determine if the possible position in the best one to take
 def pos_eval():
     pass
-
+#Alejandro likes big dicks
 # This function is the min-max algorithm
 #function for minmax algorithm
 def minmax():
