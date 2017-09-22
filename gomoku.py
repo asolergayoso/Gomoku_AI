@@ -17,7 +17,7 @@ turnFile = groupname + ".go"
 
 class Node():
     def __init__(self, depth, player):
-        self.depth = depth. #depth at which the node is at in tree
+        self.depth = depth #depth at which the node is at in tree
         self.value = 0  #initialises to zero 
         self.player = player  #0 = opponent, 1 = our agent
         self.table = [] #
@@ -30,27 +30,27 @@ class TableBox:
         self.occupied = 0 # 0 = empty, -1 = opponent, 1 = our player
 
 #=============================================================================================
-#MINIMAX ALGORITHM
-#Position Evaualtion Function to determine if the possible position in the best one to take 
-def pos_eval(): 
-# This function is the min-max algorithm 
-#function for minmax algorithm 
-def minmax():
-def max_value():
-	if(node.depth = 0):
-		return node.value()
-	v = -maxsize
-	for (node.value && node.move) in currentnode.children():
-	v = max(min_value(node.children.move))
-	return v
-
-def min_value():	
-	if(node.depth = 0):
-		return node.value()
-	v = maxsize
-	for (node.value && node.move) in currentnode.children():
-	v = min(max_value(node.children.value))
-	return v
+# #MINIMAX ALGORITHM
+# #Position Evaualtion Function to determine if the possible position in the best one to take
+# def pos_eval():
+# # This function is the min-max algorithm
+# #function for minmax algorithm
+# def minmax():
+# def max_value():
+# 	if(node.depth = 0):
+# 		return node.value()
+# 	v = -maxsize
+# 	for (node.value && node.move) in currentnode.children():
+# 	v = max(min_value(node.children.move))
+# 	return v
+#
+# def min_value():
+# 	if(node.depth = 0):
+# 		return node.value()
+# 	v = maxsize
+# 	for (node.value && node.move) in currentnode.children():
+# 	v = min(max_value(node.children.value))
+# 	return v
 
 ##============================================================================================
 ##FUNCTIONS
@@ -64,7 +64,7 @@ def init_table():
 def move():
     for v in range(1, 15):
         for h in range(1, 15):
-            table.append(TableBox(h, v, 0))
+            global_table.append(TableBox(h, v, 0))
 
 
 #This function check if the game ended
