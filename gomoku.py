@@ -32,25 +32,29 @@ class TableBox:
 #=============================================================================================
 # #MINIMAX ALGORITHM
 # #Position Evaualtion Function to determine if the possible position in the best one to take
-# def pos_eval():
-# # This function is the min-max algorithm
-# #function for minmax algorithm
-# def minmax():
-# def max_value():
-# 	if(node.depth = 0):
-# 		return node.value()
-# 	v = -maxsize
-# 	for (node.value && node.move) in currentnode.children():
-# 	v = max(min_value(node.children.move))
-# 	return v
-#
-# def min_value():
-# 	if(node.depth = 0):
-# 		return node.value()
-# 	v = maxsize
-# 	for (node.value && node.move) in currentnode.children():
-# 	v = min(max_value(node.children.value))
-# 	return v
+def pos_eval():
+    pass
+
+# This function is the min-max algorithm
+#function for minmax algorithm
+def minmax():
+    pass
+
+def max_value():
+	if(node.depth == 0):
+		return node.value()
+	v = -maxsize
+	for (node.value && node.move) in currentnode.children():
+	    v = max(min_value(node.children.move))
+	return v
+
+def min_value():
+	if(node.depth == 0):
+		return node.value()
+	v = maxsize
+	for (node.value && node.move) in currentnode.children():
+	v = min(max_value(node.children.value))
+	return v
 
 ##============================================================================================
 ##FUNCTIONS
@@ -89,15 +93,15 @@ def main():
 
     init_table()  ##creates an empty table
 
-    while(check_end()):
+    while(True):
         # if not our turn and no end_game, then do nothing
         while wait_for_turn() and check_end():
             pass
 
         # breaks the while loop if game ends
-        #if check_end() == False:
-         #   print ("Game has ended")
-          #  break
+        if check_end() == False:
+           print ("Game has ended")
+           break
 
 
         #parsing the the move_file, reads the opponent's move
