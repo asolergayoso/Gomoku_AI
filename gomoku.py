@@ -24,7 +24,7 @@ class Node():
         self.table = [] #
         self.children = []	#link nodes to the nodes
 
-#Rushdi likes big dicks
+
 class TableBox:
     def __init__(self, posX, posY, occupied):
         self.posX = posX
