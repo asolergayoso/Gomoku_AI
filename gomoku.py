@@ -8,7 +8,8 @@ from sys import maxsize
 ## GLOBAL VARIABLES
 
 depth = 225 #number of boxes on the table 15^15
-global_table = []  #list to maintain the position of tha table
+global_table = [[-1] * 15]*15  #list to maintain the position of tha table, initialized to empty values
+ascii = 65   #initialises ascii counter
 groupname = "WeWillSee"
 turnFile = groupname + ".go"
 letters = {}   #converts letters to numbers
@@ -19,17 +20,35 @@ letters = {}   #converts letters to numbers
 class Node():
     def __init__(self, depth, player):
         self.depth = depth #depth at which the node is at in tree
-        self.value = 0  #initialises to zero 
+        self.utility = maxsize  #initialises to zero
         self.player = player  #0 = opponent, 1 = our agent
-        self.table = [] #
+        self.table = [[]] #
         self.children = []	#link nodes to the nodes
+        self.CreateChildren()
+
+    def CreateChilderen(self):
+        if self.depth >=0:
+            for v in self.table:
+                for h in self.table[v]:
+                    if h.occupied == -1:
+                        new = Node(self.depth -1, not self.player)
+                        new.table = self.table
+                        new.table[v][h].occupied = self.player
+                        self.children.append(new)
+
+    def getValue(self):
+        if (self.player == 0)
+            self.utility = -maxsize
+        else:
+            self.utility = maxsize
+
 
 
 class TableBox:
-    def __init__(self, posX, posY, occupied):
-        self.posX = posX
-        self.posY = posY
-        self.occupied = 0 # 0 = empty, -1 = opponent, 1 = our player
+    def __init__(self, occupied):
+       # self.posX = posX
+       # self.posY = posY
+        self.occupied = occupied # -1 = empty, 0 = opponent, 1 = our player
 
 #=============================================================================================
 # #MINIMAX ALGORITHM
@@ -39,36 +58,36 @@ def pos_eval():
 
 # This function is the min-max algorithm
 #function for minmax algorithm
-def minmax():
-    pass
-
-def max_value():
-	if(node.depth == 0):
-		return node.value()
-	v = -maxsize
-	for (node.value && node.move) in currentnode.children():
-	    v = max(min_value(node.children.move))
-	return v
-
-def min_value():
-	if(node.depth == 0):
-		return node.value()
-	v = maxsize
-	for (node.value && node.move) in currentnode.children():
-	v = min(max_value(node.children.value))
-	return v
+# def minmax():
+#     pass
+#
+# def max_value():
+# 	if(node.depth == 0):
+# 		return node.value()
+# 	v = -maxsize
+# 	for (node.value && node.move) in currentnode.children():
+# 	    v = max(min_value(node.children.move))
+# 	return v
+#
+# def min_value():
+# 	if(node.depth == 0):
+# 		return node.value()
+# 	v = maxsize
+# 	for (node.value && node.move) in currentnode.children():
+# 	v = min(max_value(node.children.value))
+# 	return v
 
 ##============================================================================================
 ##FUNCTIONS
 
 #This function makes an empty board
-def init_table():
-    for v in range(1, 15):
-        for h in range(1, 15):
-            global_table.append(TableBox(h, v, 0))
+# def init_table():
+#     for v in range(15):
+#         for h in range(15):
+#             global_table[v][h] = TableBox(-1)
 
 def move(x, y, player):
-    global_table.append(TableBox(x, y, player))   #updates global table
+    global_table[x][y] = TableBox(player) #updates global table
     if player:
         file = open("move_file", 'w')
         for n in letters:
@@ -96,8 +115,8 @@ def wait_for_turn():
 #MAIN FUNCTION
 def main():
 
-    init_table()  ##creates an empty table
-    ascii = 65   #initialises ascii counter
+    global ascii
+
     for i in range(1,15):
         letters[chr(ascii)] = i     #assigns value to dictionary
         ascii = ascii + 1      # incrememts the ascii counter
@@ -115,14 +134,20 @@ def main():
 
         #parsing the the move_file, reads the opponent's move
         file = open("move_file",'r')
-
         for line in file:
-            wordlist = line.split()
+            oponent_move = line.split()
 
-        print(wordlist)
+        print(oponent_move)
 
-        current_state = Node(depth, 0)   #root node of tree
-        current_state.table = global_table
+        if not opponent_move:
+            current_state = Node(depth, 1)  # root node of tree
+            current_state.table = global_table
+        else:
+            global_table[letters[oponent_move[1]]][int(oponent_move[2])].occupied = 0;  #enemy move
+            current_state = Node(depth - 1, 1)  # root node of tree
+            current_state.table = global_table
+
+        depth = depth - 1
 
 
 
