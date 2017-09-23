@@ -22,6 +22,7 @@ class Node():
         self.depth = depth #depth at which the node is at in tree
         self.utility = maxsize  #initialises to zero
         self.player = player  #0 = opponent, 1 = our agent
+        self.win
         self.table = [[]] #
         self.children = []	#link nodes to the nodes
         self.CreateChildren()
@@ -37,7 +38,7 @@ class Node():
                         self.children.append(new)
 
     def getValue(self):
-        if (self.player == 0)
+        if (self.player == 0):
             self.utility = -maxsize
         else:
             self.utility = maxsize
@@ -53,8 +54,55 @@ class TableBox:
 #=============================================================================================
 # #MINIMAX ALGORITHM
 # #Position Evaualtion Function to determine if the possible position in the best one to take
-def pos_eval():
-    pass
+def checkHorizontal(table, last_moveX, last_moveY, player):
+    counter = 1
+    cX = 1
+    while (cX < 5 and counter <= 5):
+        if last_moveX + cX < 14:
+            if table[last_moveX + cX][last_moveY].occupied == player:
+                counter = counter + 1
+
+        if last_moveX - cX > 0:
+            if table[last_moveX - cX][last_moveY].occupied == player:
+                counter = counter + 1
+        cX += 1
+
+    return counter == 5
+
+def checkVertical(table, last_moveX, last_moveY, player):
+    counter = 1
+    cY = 1
+    while (cY <5 and counter <= 5):
+        if last_moveX + cY < 14:
+            if table[last_moveX][last_moveY + cY].occupied == player:
+                counter = counter + 1
+
+        if last_moveX - cY > 0:
+            if table[last_moveX][last_moveY - cY].occupied == player:
+                counter = counter + 1
+        cY += 1
+
+    return counter == 5
+
+
+
+def checkDiagonal(table, last_moveX, last_moveY, player):
+    counter = 1
+    cY = 1
+    cX = 1
+    while (cY <5 and cX < 5 and counter <= 5):
+        if last_moveX + cY < 14:
+            if table[last_moveX + cX][last_moveY + cY].occupied == player:
+                counter = counter + 1
+
+        if last_moveX - cY > 0:
+            if table[last_moveX - cX][last_moveY - cY].occupied == player:
+                counter = counter + 1
+        cY += 1
+        cX += 1
+
+    return counter == 5
+
 
 # This function is the min-max algorithm
 #function for minmax algorithm
@@ -85,6 +133,8 @@ def pos_eval():
 #     for v in range(15):
 #         for h in range(15):
 #             global_table[v][h] = TableBox(-1)
+
+
 
 def move(x, y, player):
     global_table[x][y] = TableBox(player) #updates global table
