@@ -52,7 +52,7 @@ class TableBox:
         self.occupied = occupied # -1 = empty, 0 = opponent, 1 = our player
 
 #=============================================================================================
-# #MINIMAX ALGORITHM
+#
 # #Position Evaualtion Function to determine if the possible position in the best one to take
 def checkHorizontal(table, last_moveX, last_moveY, player):
     counter = 1
@@ -86,7 +86,7 @@ def checkVertical(table, last_moveX, last_moveY, player):
 
 
 
-def checkDiagonal(table, last_moveX, last_moveY, player):
+def checkDiagonal1(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
     cX = 1
@@ -104,26 +104,43 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
     return counter == 5
 
 
+
+def checkDiagonal2(table, last_moveX, last_moveY, player):
+    counter = 1
+    cY = 1
+    cX = 1
+    while (cY <5 and cX < 5 and counter <= 5):
+        if last_moveX + cY < 14:
+            if table[last_moveX + cX][last_moveY - cY].occupied == player:
+                counter = counter + 1
+
+        if last_moveX - cY > 0:
+            if table[last_moveX - cX][last_moveY + cY].occupied == player:
+                counter = counter + 1
+        cY += 1
+        cX += 1
+
+    return counter == 5
+
+#===========================================================================================
+#MINIMAX ALGORITHM
 # This function is the min-max algorithm
-#function for minmax algorithm
-# def minmax():
-#     pass
-#
-# def max_value():
-# 	if(node.depth == 0):
-# 		return node.value()
-# 	v = -maxsize
-# 	for (node.value && node.move) in currentnode.children():
-# 	    v = max(min_value(node.children.move))
-# 	return v
-#
-# def min_value():
-# 	if(node.depth == 0):
-# 		return node.value()
-# 	v = maxsize
-# 	for (node.value && node.move) in currentnode.children():
-# 	v = min(max_value(node.children.value))
-# 	return v
+
+def max_value():
+	if(node.depth == 0):
+		return node.value()
+	v = -maxsize
+	for (node.value && node.move) in currentnode.children():
+	    v = max(min_value(node.children.move))
+	return v
+
+def min_value():
+	if(node.depth == 0 or checkVertical() or checkHorizontal()):
+		return node.value()
+	v = maxsize
+	for (node.value && node.move) in currentnode.children():
+	v = min(max_value(node.children.value))
+	return v
 
 ##============================================================================================
 ##FUNCTIONS
