@@ -20,9 +20,9 @@ letters = {}   #converts letters to numbers
 class Node():
     def __init__(self, depth, player):
         self.depth = depth #depth at which the node is at in tree
-        self.utility = maxsize  #initialises to zero
+        self.utility = getValue()  #initialises to zero
         self.player = player  #0 = opponent, 1 = our agent
-        self.win
+        self.win = -1
         self.table = [[]] #
         self.children = []	#link nodes to the nodes
         self.CreateChildren()
@@ -35,6 +35,7 @@ class Node():
                         new = Node(self.depth -1, not self.player)
                         new.table = self.table
                         new.table[v][h].occupied = self.player
+                        evaluateNode(new, h, v)        #evaluate the child node
                         self.children.append(new)
 
     def getValue(self):
@@ -42,7 +43,6 @@ class Node():
             self.utility = -maxsize
         else:
             self.utility = maxsize
-
 
 
 class TableBox:
@@ -126,8 +126,40 @@ def checkDiagonal2(table, last_moveX, last_moveY, player):
 #MINIMAX ALGORITHM
 # This function is the min-max algorithm
 
-def max_value():
-	if(node.depth == 0):
+#returns a minimax value 0 for no utility, 1 for max utility, -1 for min ustility
+
+def evaluateNode(n,lastX,lastY):
+    #check if max wins
+    if(checkDiagonal1(n,lastX,lastY,1) or checkDiagonal2(n,lastX,lastY,1) or checkHorizontal(n,lastX,lastY,1) or checkVertical(n,lastX,lastY,1)):
+        n.utility = 1
+        return True
+    #check if min wins
+    elif(checkDiagonal1(n,lastX,lastY,0) or checkDiagonal2(n,lastX,lastY,0) or checkHorizontal(n,lastX,lastY,0) or  checkVertical(n,lastX,lastY,0)):
+         n.utility= -1
+         return True
+    #no winner or game is over
+    elif(node.depth == 0):
+        n.utility = 0
+        return True
+    else:
+        return False
+
+# def terminalTest(n,lastX,lastY):
+#     #check if max wins
+#     if(checkDiagonal1(n,lastX,lastY,1) or checkDiagonal2(n,lastX,lastY,1) or checkHorizontal(n,lastX,lastY,1) or checkVertical(n,lastX,lastY,1)):
+#         return True
+#     #check if min wins
+#     elif(checkDiagonal1(n,lastX,lastY,2) or checkDiagonal2(n,lastX,lastY,2) or checkHorizontal(n,lastX,lastY,2) or  checkVertical(n,lastX,lastY,2)):
+#          return True
+#     #no winner or game is over
+#     elif(node.depth==0):
+#         return True
+#     else:
+#         return Fa
+#
+
+def max_value(currentState,lastX,lastY):
+	if(evaluateNode(currentState,)):
 		return node.value()
 	v = -maxsize
 	for (node.value && node.move) in currentnode.children():
@@ -138,7 +170,7 @@ def min_value():
 	if(node.depth == 0 or checkVertical() or checkHorizontal()):
 		return node.value()
 	v = maxsize
-	for (node.value && node.move) in currentnode.children():
+	for (node.value and node.move) in currentnode.children():
 	v = min(max_value(node.children.value))
 	return v
 
