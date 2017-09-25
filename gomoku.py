@@ -8,7 +8,7 @@ from sys import maxsize
 ## GLOBAL VARIABLES
 
 depth = 225 #number of boxes on the table 15^15
-global_table = [[-1] * 15]*15  #list to maintain the position of tha table, initialized to empty values
+global_table = [[-1]*15 for _ in range (15)]  #list to maintain the position of tha table, initialized to empty values
 ascii = 65   #initialises ascii counter
 groupname = "WeWillSee"
 turnFile = groupname + ".go"
@@ -20,23 +20,27 @@ letters = {}   #converts letters to numbers
 class Node():
     def __init__(self, depth, player):
         self.depth = depth #depth at which the node is at in tree
-        self.utility = getValue()  #initialises to zero
         self.player = player  #0 = opponent, 1 = our agent
-        self.win = -1
-        self.table = [[]] #
+        self.lastX = 0
+        self.lastY = 0
+        self.table = [[-1] * 15 for _ in range(15)] # to keep track of all the possible moves
         self.children = []	#link nodes to the nodes
-        self.CreateChildren()
+        self.utility = self.getValue()  # initialises to zero
+        #self.CreateChildren()
 
-    def CreateChilderen(self):
-        if self.depth >=0:
-            for v in self.table:
-                for h in self.table[v]:
-                    if h.occupied == -1:
-                        new = Node(self.depth -1, not self.player)
+    def CreateChildren(self):
+        if self.depth > 0:
+            for v in range(len(self.table)):
+                for h in range(len(self.table)):
+                    if self.table[v][h] == -1:
+                        new = Node(self.depth - 1, not self.player)
                         new.table = self.table
-                        new.table[v][h].occupied = self.player
-                        evaluateNode(new, h, v)        #evaluate the child node
+                        new.table[v][h] = self.player
+                        new.lastX = h
+                        new.lastY = v
                         self.children.append(new)
+
+
 
     def getValue(self):
         if (self.player == 0):
@@ -53,17 +57,17 @@ class TableBox:
 
 #=============================================================================================
 #
-# #Position Evaualtion Function to determine if the possible position in the best one to take
+## THE FOLLOWING FUNCTIONS WILL DETERMINE IF THERE ARE 5 ADJACENT PIECES, EITHER DIAGONALLY VERTICALLY OR HORIZONTALLY
 def checkHorizontal(table, last_moveX, last_moveY, player):
     counter = 1
     cX = 1
     while (cX < 5 and counter <= 5):
         if last_moveX + cX < 14:
-            if table[last_moveX + cX][last_moveY].occupied == player:
+            if table[last_moveX + cX][last_moveY] == player:
                 counter = counter + 1
 
         if last_moveX - cX > 0:
-            if table[last_moveX - cX][last_moveY].occupied == player:
+            if table[last_moveX - cX][last_moveY] == player:
                 counter = counter + 1
         cX += 1
 
@@ -74,11 +78,11 @@ def checkVertical(table, last_moveX, last_moveY, player):
     cY = 1
     while (cY <5 and counter <= 5):
         if last_moveX + cY < 14:
-            if table[last_moveX][last_moveY + cY].occupied == player:
+            if table[last_moveX][last_moveY + cY] == player:
                 counter = counter + 1
 
         if last_moveX - cY > 0:
-            if table[last_moveX][last_moveY - cY].occupied == player:
+            if table[last_moveX][last_moveY - cY] == player:
                 counter = counter + 1
         cY += 1
 
@@ -86,18 +90,24 @@ def checkVertical(table, last_moveX, last_moveY, player):
 
 
 
-def checkDiagonal1(table, last_moveX, last_moveY, player):
+def checkDiagonal(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
     cX = 1
     while (cY <5 and cX < 5 and counter <= 5):
-        if last_moveX + cY < 14:
-            if table[last_moveX + cX][last_moveY + cY].occupied == player:
+        if last_moveX + cX < 15 and last_moveY - cY > 0:
+            if table[last_moveX + cX][last_moveY - cY] == player:
+                counter = counter + 1
+        elif last_moveX - cX > 0 and last_moveY + cY < 15:
+            if table[last_moveX + cX][last_moveY - cY] == player:
+                counter = counter + 1
+        elif last_moveX + cX < 15 and last_moveY + cY < 15:
+            if table[last_moveX + cX][last_moveY + cY] == player:
+                counter = counter + 1
+        elif last_moveX - cX < 15 and last_moveY - cY < 15:
+            if table[last_moveX - cX][last_moveY - cY] == player:
                 counter = counter + 1
 
-        if last_moveX - cY > 0:
-            if table[last_moveX - cX][last_moveY - cY].occupied == player:
-                counter = counter + 1
         cY += 1
         cX += 1
 
@@ -105,22 +115,40 @@ def checkDiagonal1(table, last_moveX, last_moveY, player):
 
 
 
-def checkDiagonal2(table, last_moveX, last_moveY, player):
-    counter = 1
-    cY = 1
-    cX = 1
-    while (cY <5 and cX < 5 and counter <= 5):
-        if last_moveX + cY < 14:
-            if table[last_moveX + cX][last_moveY - cY].occupied == player:
-                counter = counter + 1
+# def checkDiagonal2(table, last_moveX, last_moveY, player):
+#     counter = 1
+#     cY = 1
+#     cX = 1
+#     while (cY <5 and cX < 5 and counter <= 5):
+#         if last_moveX + cY < 14:
+#             if table[last_moveX + cX][last_moveY - cY] == player:
+#                 counter = counter + 1
+#
+#         if last_moveX - cY > 0:
+#             if table[last_moveX - cX][last_moveY + cY] == player:
+#                 counter = counter + 1
+#         cY += 1
+#         cX += 1
+#
+#     return counter == 5
 
-        if last_moveX - cY > 0:
-            if table[last_moveX - cX][last_moveY + cY].occupied == player:
-                counter = counter + 1
-        cY += 1
-        cX += 1
 
-    return counter == 5
+## This function is supposed to find if the state is a win a loose or a draw
+def TerminalTest(n):
+    #check if max wins
+    if(checkDiagonal(n.table,n.lastX,n.lastY,1) or checkHorizontal(n.table,n.lastX,n.lastY,1) or checkVertical(n.table,n.lastX,n.lastY,1)):
+        n.utility = 1
+        return True
+    #check if min wins
+    elif(checkDiagonal(n.table,n.lastX,n.lastY,0) or checkHorizontal(n.table,n.lastX,n.lastY,0) or checkVertical(n.table,n.lastX,n.lastY,0)):
+         n.utility= -1
+         return True
+    #no winner or game is over
+    elif(n.depth == 0):
+        n.utility = 0
+        return True
+    else:
+        return False
 
 #===========================================================================================
 #MINIMAX ALGORITHM
@@ -128,71 +156,51 @@ def checkDiagonal2(table, last_moveX, last_moveY, player):
 
 #returns a minimax value 0 for no utility, 1 for max utility, -1 for min ustility
 
-def evaluateNode(n,lastX,lastY):
-    #check if max wins
-    if(checkDiagonal1(n,lastX,lastY,1) or checkDiagonal2(n,lastX,lastY,1) or checkHorizontal(n,lastX,lastY,1) or checkVertical(n,lastX,lastY,1)):
-        n.utility = 1
-        return True
-    #check if min wins
-    elif(checkDiagonal1(n,lastX,lastY,0) or checkDiagonal2(n,lastX,lastY,0) or checkHorizontal(n,lastX,lastY,0) or  checkVertical(n,lastX,lastY,0)):
-         n.utility= -1
-         return True
-    #no winner or game is over
-    elif(node.depth == 0):
-        n.utility = 0
-        return True
-    else:
-        return False
+def minimax(state):
+    result = []
+    optimal = min_value(state)
+    for child in state.children:
+        if child.utility == optimal:
+            child.lastX = result[0]
+            child.lastY = result[1]
+            return result
 
-# def terminalTest(n,lastX,lastY):
-#     #check if max wins
-#     if(checkDiagonal1(n,lastX,lastY,1) or checkDiagonal2(n,lastX,lastY,1) or checkHorizontal(n,lastX,lastY,1) or checkVertical(n,lastX,lastY,1)):
-#         return True
-#     #check if min wins
-#     elif(checkDiagonal1(n,lastX,lastY,2) or checkDiagonal2(n,lastX,lastY,2) or checkHorizontal(n,lastX,lastY,2) or  checkVertical(n,lastX,lastY,2)):
-#          return True
-#     #no winner or game is over
-#     elif(node.depth==0):
-#         return True
-#     else:
-#         return Fa
-#
+def max_value(state):
+    #state.CreateChildren()
+    if(TerminalTest(state)):
+        return state.utility
+    state.utility = -maxsize
+    state.CreateChildren()
+    for child in state.children:
+        optimal = min_value(child)
+        if (optimal >= state.utility):
+            state.utility = optimal
+    # utility = max(min_value(child))
+    return state.utility
 
-def max_value(currentState,lastX,lastY):
-	if(evaluateNode(currentState,)):
-		return node.value()
-	v = -maxsize
-	for (node.value && node.move) in currentnode.children():
-	    v = max(min_value(node.children.move))
-	return v
-
-def min_value():
-	if(node.depth == 0 or checkVertical() or checkHorizontal()):
-		return node.value()
-	v = maxsize
-	for (node.value and node.move) in currentnode.children():
-	v = min(max_value(node.children.value))
-	return v
+def min_value(state):
+    #state.CreateChildren()
+    if(TerminalTest(state)):
+        return state.utility
+    state.utility = maxsize
+    state.CreateChildren()
+    for child in state.children:
+        optimal = max_value(child)
+        if (optimal <= state.utility):
+            state.utility = optimal
+    #utility = min(max_value(node.children.value))
+    return state.utility
 
 ##============================================================================================
 ##FUNCTIONS
 
-#This function makes an empty board
-# def init_table():
-#     for v in range(15):
-#         for h in range(15):
-#             global_table[v][h] = TableBox(-1)
-
-
-
-def move(x, y, player):
-    global_table[x][y] = TableBox(player) #updates global table
-    if player:
-        file = open("move_file", 'w')
-        for n in letters:
-            if letters[n] == y:
-             file.writelines([groupname, ' ', n, ' ', str(x)])
-             file.close()
+def write_move(x, y):
+    global_table[x][y] = 1 #updates global table
+    file = open("move_file", 'w')
+    for n in letters:
+        if letters[n] == y:
+         file.writelines([groupname, ' ', n, ' ', str(x)])
+         file.close()
 
 #This function check if the game ended
 def check_end():
@@ -215,8 +223,10 @@ def wait_for_turn():
 def main():
 
     global ascii
+    global depth
 
-    for i in range(1,15):
+
+    for i in range(15):
         letters[chr(ascii)] = i     #assigns value to dictionary
         ascii = ascii + 1      # incrememts the ascii counter
 
@@ -234,25 +244,40 @@ def main():
         #parsing the the move_file, reads the opponent's move
         file = open("move_file",'r')
         for line in file:
-            oponent_move = line.split()
+            opponent_move = line.split()
 
-        print(oponent_move)
+        print(opponent_move)
+
 
         if not opponent_move:
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
         else:
-            global_table[letters[oponent_move[1]]][int(oponent_move[2])].occupied = 0;  #enemy move
-            current_state = Node(depth - 1, 1)  # root node of tree
+            depth = depth - 1
+            global_table[letters[opponent_move[1]]][int(opponent_move[2])-1] = 0;  #enemy move ###############.occupied
+            current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
+
+
+
+        for v in range(len(global_table)):
+            for h in range(len(global_table)):
+                print ((current_state.table[v][h]), end=" ")
+            print ("")
+
+        #current_state.CreateChildren()
+       # print ("child.lastX = " + str(current_state.children[1].lastX))
+
+
+
+        best_move = []
+        best_move = minimax(current_state)
+        print (best_move)
+        write_move(best_move[0], best_move[1])
 
         depth = depth - 1
 
-
-
-        move(3, 3, 1)
-
-        #minimax(current_state)
+        print ("finished moving")
 
     return
 
