@@ -76,7 +76,7 @@ def checkHorizontal(table, last_moveX, last_moveY, player):
 def checkVertical(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
-    while (cY <5 and counter <= 5):
+    while cY <5 and counter <= 5:
         if last_moveY + cY < 15:
             if table[last_moveX][last_moveY + cY] == player:
                 counter = counter + 1
@@ -94,17 +94,21 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
     cX = 1
-    while (cY <5 and cX < 5 and counter <= 5):
-        if last_moveX + cX < 15 and last_moveY - cY > 0:
+    while cY <5 and cX < 5 and counter <= 5:
+        #diagonal up right
+        if last_moveX + cX < 15 and last_moveY - cY >= 0:
             if table[last_moveX + cX][last_moveY - cY] == player:
                 counter = counter + 1
-        elif last_moveX - cX > 0 and last_moveY + cY < 15:
+        #diagonal down left
+        elif last_moveX - cX >= 0 and last_moveY + cY < 15:
             if table[last_moveX + cX][last_moveY - cY] == player:
                 counter = counter + 1
+        #diagonal down right
         elif last_moveX + cX < 15 and last_moveY + cY < 15:
             if table[last_moveX + cX][last_moveY + cY] == player:
                 counter = counter + 1
-        elif last_moveX - cX < 15 and last_moveY - cY < 15:
+        #diagonal down left
+        elif last_moveX - cX >= 0 and last_moveY - cY >= 0:
             if table[last_moveX - cX][last_moveY - cY] == player:
                 counter = counter + 1
 
@@ -114,30 +118,10 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
     return counter == 5
 
 
-
-# def checkDiagonal2(table, last_moveX, last_moveY, player):
-#     counter = 1
-#     cY = 1
-#     cX = 1
-#     while (cY <5 and cX < 5 and counter <= 5):
-#         if last_moveX + cY < 14:
-#             if table[last_moveX + cX][last_moveY - cY] == player:
-#                 counter = counter + 1
-#
-#         if last_moveX - cY > 0:
-#             if table[last_moveX - cX][last_moveY + cY] == player:
-#                 counter = counter + 1
-#         cY += 1
-#         cX += 1
-#
-#     return counter == 5
-
-
 ## This function is supposed to find if the state is a win a loose or a draw
 def TerminalTest(n):
     #check if max wins
-   # if(checkDiagonal(n.table,n.lastX,n.lastY,1) or checkHorizontal(n.table,n.lastX,n.lastY,1) or checkVertical(n.table,n.lastX,n.lastY,1)):
-    if checkHorizontal(n.table, n.lastX, n.lastY,1) or checkVertical(n.table, n.lastX, n.lastY, 1):
+    if(checkDiagonal(n.table,n.lastX,n.lastY,1) or checkHorizontal(n.table,n.lastX,n.lastY,1) or checkVertical(n.table,n.lastX,n.lastY,1)):
         n.utility = 1
         return True
     #check if min wins
@@ -265,7 +249,7 @@ def main():
 
         for v in range(len(global_table)):
             for h in range(len(global_table)):
-                print ((current_state.table[v][h]), end=" ")
+                print (current_state.table[v][h]),# end=" "
             print ("")
 
         #current_state.CreateChildren()
