@@ -77,11 +77,11 @@ def checkVertical(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
     while (cY <5 and counter <= 5):
-        if last_moveX + cY < 14:
+        if last_moveY + cY < 15:
             if table[last_moveX][last_moveY + cY] == player:
                 counter = counter + 1
 
-        if last_moveX - cY > 0:
+        if last_moveY - cY > 0:
             if table[last_moveX][last_moveY - cY] == player:
                 counter = counter + 1
         cY += 1
@@ -136,11 +136,13 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
 ## This function is supposed to find if the state is a win a loose or a draw
 def TerminalTest(n):
     #check if max wins
-    if(checkDiagonal(n.table,n.lastX,n.lastY,1) or checkHorizontal(n.table,n.lastX,n.lastY,1) or checkVertical(n.table,n.lastX,n.lastY,1)):
+   # if(checkDiagonal(n.table,n.lastX,n.lastY,1) or checkHorizontal(n.table,n.lastX,n.lastY,1) or checkVertical(n.table,n.lastX,n.lastY,1)):
+    if checkHorizontal(n.table, n.lastX, n.lastY,1) or checkVertical(n.table, n.lastX, n.lastY, 1):
         n.utility = 1
         return True
     #check if min wins
-    elif(checkDiagonal(n.table,n.lastX,n.lastY,0) or checkHorizontal(n.table,n.lastX,n.lastY,0) or checkVertical(n.table,n.lastX,n.lastY,0)):
+    #elif(checkDiagonal(n.table,n.lastX,n.lastY,0) or checkHorizontal(n.table,n.lastX,n.lastY,0) or checkVertical(n.table,n.lastX,n.lastY,0)):
+    elif checkHorizontal(n.table, n.lastX, n.lastY, 0) or checkVertical(n.table, n.lastX, n.lastY, 0):
          n.utility= -1
          return True
     #no winner or game is over
@@ -157,12 +159,13 @@ def TerminalTest(n):
 #returns a minimax value 0 for no utility, 1 for max utility, -1 for min ustility
 
 def minimax(state):
-    result = []
     optimal = min_value(state)
     for child in state.children:
         if child.utility == optimal:
-            child.lastX = result[0]
-            child.lastY = result[1]
+            print (child.lastX)
+            result = [child.lastX, child.lastY]
+           # result[0] = child.lastX
+           # result[1] = Child.lastY
             return result
 
 def max_value(state):
@@ -267,7 +270,6 @@ def main():
 
         #current_state.CreateChildren()
        # print ("child.lastX = " + str(current_state.children[1].lastX))
-
 
 
         best_move = []
