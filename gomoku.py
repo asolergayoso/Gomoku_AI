@@ -177,14 +177,14 @@ def min_value(state):
     state.CreateChildren()
     for child in state.children:
         optimal = max_value(child)
-        if (optimal <= state.utility):
+        if optimal <= state.utility:
             state.utility = optimal
     # utility = min(max_value(node.children.value))
     return state.utility
 
 
-##============================================================================================
-##FUNCTIONS
+# ##################################################################
+# #FUNCTIONS
 
 def write_move(x, y):
     global_table[x][y] = 1  # updates global table
@@ -260,6 +260,7 @@ def main():
 
         for v in range(len(global_table)):
             for h in range(len(global_table)):
+
                 print ((current_state.table[v][h]), end=" ")
             print ("")
 
