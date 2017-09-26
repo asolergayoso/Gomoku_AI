@@ -262,12 +262,6 @@ def main():
             for h in range(len(global_table)):
 
                 print ((current_state.table[v][h]), end=" ")
-<<<<<<< HEAD
-=======
-
-                print (current_state.table[v][h]),  # end=" "
-
->>>>>>> 648fd516123f7c3a5fed7e7b36e1bf3c04d32e34
             print ("")
 
             # current_state.CreateChildren()
