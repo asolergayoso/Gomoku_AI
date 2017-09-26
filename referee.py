@@ -51,7 +51,7 @@ class GomokuBoard(object):
         x, y = index
         return self._field[x][y]
 
-    def isFieldOpen(self, (x,y)):
+    def isFieldOpen(self, x,y):
         return self._field[x][y].isEmpty
 
     def placeToken(self, move):

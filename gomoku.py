@@ -101,7 +101,7 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
                 counter = counter + 1
         #diagonal down left
         elif last_moveX - cX >= 0 and last_moveY + cY < 15:
-            if table[last_moveX + cX][last_moveY - cY] == player:
+            if table[last_moveX - cX][last_moveY + cY] == player:
                 counter = counter + 1
         #diagonal down right
         elif last_moveX + cX < 15 and last_moveY + cY < 15:
@@ -249,7 +249,7 @@ def main():
 
         for v in range(len(global_table)):
             for h in range(len(global_table)):
-                print (current_state.table[v][h]),# end=" "
+                print ((current_state.table[v][h]), end=" ")
             print ("")
 
         #current_state.CreateChildren()
