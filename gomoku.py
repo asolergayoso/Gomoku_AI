@@ -180,12 +180,14 @@ def min_value(state, alpha, beta):
 # #FUNCTIONS
 
 def write_move(x, y):
+	global depth
     global_table[x][y] = 1  # updates global table
     file = open("move_file", 'w')
     for n in letters:
         if letters[n] == y:
             file.writelines([groupname, ' ', n, ' ', str(x)])
             file.close()
+    depth -= 1        
 
 
 # This function check if the game ended
