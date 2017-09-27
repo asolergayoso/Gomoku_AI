@@ -10,7 +10,7 @@ from sys import maxsize
 depth = 225  # number of boxes on the table 15^15
 global_table = [[-1] * 15 for _ in range(15)]  # list to maintain the position of tha table, initialized to empty values
 ascii = 65  # initialises ascii counter
-groupname = "WeWillSee"
+groupname = "RAM"
 turnFile = groupname + ".go"
 letters = {}  # converts letters to numbers
 alpha = -maxsize
@@ -29,7 +29,7 @@ class Node:
         self.table = [[-1] * 15 for _ in range(15)]  # to keep track of all the possible moves
         self.children = []  # link nodes to the nodes
         self.utility = self.getValue()  # initialises to zero
-        self.CreateChildren()
+        #self.CreateChildren()
 
     def CreateChildren(self):
         if self.depth > 0:
@@ -150,7 +150,7 @@ def max_value(state, alpha, beta):
     if TerminalTest(state):
         return state.utility
     state.utility = -maxsize
-    #state.CreateChildren()
+    state.CreateChildren()
     for child in state.children:
         optimal = min_value(child, alpha, beta)
         if optimal >= state.utility:
@@ -165,7 +165,7 @@ def min_value(state, alpha, beta):
     if TerminalTest(state):
         return state.utility
     state.utility = maxsize
-    #state.CreateChildren()
+    state.CreateChildren()
     for child in state.children:
         optimal = max_value(child, alpha, beta)
         if optimal <= state.utility:
@@ -180,12 +180,12 @@ def min_value(state, alpha, beta):
 # #FUNCTIONS
 
 def write_move(x, y):
-	global depth
+    global depth
     global_table[x][y] = 1  # updates global table
     file = open("move_file", 'w')
     for n in letters:
         if letters[n] == y:
-            file.writelines([groupname, ' ', n, ' ', str(x)])
+            file.write([groupname + ' ' + n + ' ' + str(x)])
             file.close()
     depth -= 1
 
@@ -201,7 +201,7 @@ def check_end():
 # wait_for_turn() tells us if it's our turn
 def wait_for_turn():
     for f in os.listdir('.'):
-        if f == (turnFile):
+        if f == turnFile:
             return False  # our turn
     return True  # not our turn
 
@@ -256,10 +256,10 @@ def main():
             break
 
         for v in range(len(global_table)):
-           for h in range(len(global_table)):
-            print (current_state.table[v][h]),  # end=" ")
+            for h in range(len(global_table)):
+                print (current_state.table[v][h]),  # end=" ")
 
-        print ("\n")
+            print ("\n")
 
         # current_state.CreateChildren()
         # print ("child.lastX = " + str(current_state.children[1].lastX))
