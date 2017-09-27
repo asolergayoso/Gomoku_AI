@@ -9,7 +9,7 @@ from sys import maxsize
 
 depth = 225  # number of boxes on the table 15^15
 global_table = [[-1] * 15 for _ in range(15)]  # list to maintain the position of tha table, initialized to empty values
-ascii = 65  # initialises ascii counter
+asciiletter = 65  # initialises ascii counter
 groupname = "RAM"
 turnFile = groupname + ".go"
 letters = {}  # converts letters to numbers
@@ -184,7 +184,7 @@ def write_move(x, y):
     file = open("move_file", 'w')
     for n in letters:
         if letters[n] == y:
-            file.write([groupname + ' ' + n + ' ' + str(x)])
+            file.writelines([groupname + ' ' + n + ' ' + str(x)])
             file.close()
     depth = depth - 1
 
@@ -237,7 +237,12 @@ def main():
 
         # parsing the the move_file, reads the opponent's move
 
-        elif os.path.getsize("move_file") > 0:
+        file = open("move_file", 'r')
+        for line in file:
+            opponent_move = line.split()
+        print("Opponent Move: ", opponent_move)
+
+        if os.path.getsize("move_file") > 0:
             file = open("move_file", 'r')
             for line in file:
                 opponent_move = line.split()
@@ -256,8 +261,8 @@ def main():
 
         for v in range(len(global_table)):
             for h in range(len(global_table)):
-                print (current_state.table[v][h]),  # end=" ")
-            print ("\n")
+                print((current_state.table[v][h]), end=" ")
+            print("\n")
 
         # current_state.CreateChildren()
         # print ("child.lastX = " + str(current_state.children[1].lastX))
