@@ -56,7 +56,7 @@ class Node:
 def checkHorizontal(table, last_moveX, last_moveY, player):
     counter = 1
     cX = 1
-    while cX < 5 and counter <= 5:
+    while cX < 5 or counter <= 5:
         if last_moveX + cX < 14:
             if table[last_moveX + cX][last_moveY] == player:
                 counter = counter + 1
@@ -72,7 +72,7 @@ def checkHorizontal(table, last_moveX, last_moveY, player):
 def checkVertical(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
-    while cY < 5 and counter <= 5:
+    while cY < 5 or counter <= 5:
         if last_moveY + cY < 15:
             if table[last_moveX][last_moveY + cY] == player:
                 counter = counter + 1
@@ -89,7 +89,7 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
     cX = 1
-    while cY < 5 and cX < 5 and counter <= 5:
+    while cY < 5 or cX < 5 or counter <= 5:
         # diagonal up right
         if last_moveX + cX < 15 and last_moveY - cY >= 0:
             if table[last_moveX + cX][last_moveY - cY] == player:
@@ -116,8 +116,7 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
 # # This function is supposed to find if the state is a win a loose or a draw
 def TerminalTest(n):
     # check if max wins
-    if (checkDiagonal(n.table, n.lastX, n.lastY, 1) or checkHorizontal(n.table, n.lastX, n.lastY, 1) or checkVertical(
-            n.table, n.lastX, n.lastY, 1)):
+    if (checkDiagonal(n.table, n.lastX, n.lastY, 1) or checkHorizontal(n.table, n.lastX, n.lastY, 1) or checkVertical(n.table, n.lastX, n.lastY, 1)):
         n.utility = 1
         return True
     # check if min wins
@@ -187,7 +186,7 @@ def write_move(x, y):
         if letters[n] == y:
             file.write([groupname + ' ' + n + ' ' + str(x)])
             file.close()
-    depth -= 1
+    depth = depth - 1
 
 
 # This function check if the game ended
@@ -219,12 +218,12 @@ def eval_func(n, x, y):
 # ###############################################
 # MAIN FUNCTION
 def main():
-    global ascii
+    global asciiletter
     global depth
 
     for i in range(15):
-        letters[chr(ascii)] = i  # assigns value to dictionary
-        ascii = ascii + 1  # increments the ascii counter
+        letters[chr(asciiletter)] = i  # assigns value to dictionary
+        asciiletter = asciiletter + 1  # increments the ascii counter
 
     while True:
         # if not our turn and no end_game, then do nothing
@@ -244,21 +243,20 @@ def main():
                 opponent_move = line.split()
             print("Opponent Move: ", opponent_move)
             depth = depth - 1
-            opp_col = letters[opponent_move[1]]
-            opp_row = int(opponent_move[2])
-            global_table[opp_col][opp_row] = 0  # enemy move ###############.occupied
+            #opp_col = letters[opponent_move[1]]
+            #opp_row = int(opponent_move[2])
+            global_table[letters[opponent_move[1]]][int(opponent_move[2])] = 0  # enemy move ###############.occupied
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
         else:
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
             write_move(8, 8)
-            break
+            continue
 
         for v in range(len(global_table)):
             for h in range(len(global_table)):
                 print (current_state.table[v][h]),  # end=" ")
-
             print ("\n")
 
         # current_state.CreateChildren()
