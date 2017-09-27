@@ -29,7 +29,7 @@ class Node:
         self.table = [[-1] * 15 for _ in range(15)]  # to keep track of all the possible moves
         self.children = []  # link nodes to the nodes
         self.utility = self.getValue()  # initialises to zero
-        # self.CreateChildren()
+        self.CreateChildren()
 
     def CreateChildren(self):
         if self.depth > 0:
@@ -48,13 +48,6 @@ class Node:
             return -maxsize
         else:
             return maxsize
-
-
-class TableBox:
-    def __init__(self, occupied):
-        # self.posX = posX
-        # self.posY = posY
-        self.occupied = occupied  # -1 = empty, 0 = opponent, 1 = our player
 
 
 # =============================================================================================
@@ -149,36 +142,30 @@ def minimax(state):
     optimal = max_value(state, alpha, beta)
     for child in state.children:
         if child.utility == optimal:
-            print (child.lastX)
             result = [child.lastX, child.lastY]
-            # result[0] = child.lastX
-            # result[1] = Child.lastY
             return result
 
 
-def max_value(state):
-    # state.CreateChildren()
+def max_value(state, alpha, beta):
     if TerminalTest(state):
         return state.utility
     state.utility = -maxsize
-    state.CreateChildren()
+    #state.CreateChildren()
     for child in state.children:
         optimal = min_value(child, alpha, beta)
         if optimal >= state.utility:
             state.utility = optimal
         if state.utility >= beta:
             return state.utility
-        alpha = max(alpha , state.utility)
-    # utility = max(min_value(child))
+        alpha = max(alpha, state.utility)
     return state.utility
 
 
-def min_value(state):
-    # state.CreateChildren()
+def min_value(state, alpha, beta):
     if TerminalTest(state):
         return state.utility
     state.utility = maxsize
-    state.CreateChildren()
+    #state.CreateChildren()
     for child in state.children:
         optimal = max_value(child, alpha, beta)
         if optimal <= state.utility:
@@ -186,7 +173,6 @@ def min_value(state):
         if state.utility <= alpha:
             return state.utility
         beta = min(beta, state.utility)
-    # utility = min(max_value(node.children.value))
     return state.utility
 
 
@@ -194,12 +180,14 @@ def min_value(state):
 # #FUNCTIONS
 
 def write_move(x, y):
+	global depth
     global_table[x][y] = 1  # updates global table
     file = open("move_file", 'w')
     for n in letters:
         if letters[n] == y:
             file.writelines([groupname, ' ', n, ' ', str(x)])
             file.close()
+    depth -= 1
 
 
 # This function check if the game ended
@@ -264,6 +252,8 @@ def main():
         else:
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
+            write_move(8, 8)
+            break
 
         for v in range(len(global_table)):
            for h in range(len(global_table)):
