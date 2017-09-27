@@ -264,9 +264,9 @@ def main():
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
 
-      #  for v in range(len(global_table)):
-      #      for h in range(len(global_table)):
-      #          print ((current_state.table[v][h]), end=" ")
+       for v in range(len(global_table)):
+           for h in range(len(global_table)):
+               print ((current_state.table[v][h]), end=" ")
 
                 print (current_state.table[v][h]),  # end=" ")
             print ("\n")
