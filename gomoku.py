@@ -164,11 +164,11 @@ def max_value(state):
     state.CreateChildren()
     for child in state.children:
         optimal = min_value(child, alpha, beta)
-        if (optimal >= state.utility):
+        if optimal >= state.utility:
             state.utility = optimal
         if state.utility >= beta:
             return state.utility
-        alpha = max(alpha, state.utility)
+        alpha = max(alpha , state.utility)
     # utility = max(min_value(child))
     return state.utility
 
@@ -249,8 +249,9 @@ def main():
             break
 
         # parsing the the move_file, reads the opponent's move
-        file = open("move_file", 'r')
-        if os.path.getsize("move_file") > 0:
+
+        elif os.path.getsize("move_file") > 0:
+            file = open("move_file", 'r')
             for line in file:
                 opponent_move = line.split()
             print("Opponent Move: ", opponent_move)
@@ -264,15 +265,14 @@ def main():
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
 
-       for v in range(len(global_table)):
+        for v in range(len(global_table)):
            for h in range(len(global_table)):
-               print ((current_state.table[v][h]), end=" ")
+            print (current_state.table[v][h]),  # end=" ")
 
-                print (current_state.table[v][h]),  # end=" ")
-            print ("\n")
+        print ("\n")
 
-            # current_state.CreateChildren()
-            # print ("child.lastX = " + str(current_state.children[1].lastX))
+        # current_state.CreateChildren()
+        # print ("child.lastX = " + str(current_state.children[1].lastX))
 
         best_move = minimax(current_state)
         # best_move = [0,1]
