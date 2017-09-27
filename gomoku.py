@@ -13,6 +13,8 @@ ascii = 65  # initialises ascii counter
 groupname = "WeWillSee"
 turnFile = groupname + ".go"
 letters = {}  # converts letters to numbers
+alpha = -maxsize
+beta = maxsize
 
 
 ##==========================================================================================
@@ -126,8 +128,7 @@ def TerminalTest(n):
         n.utility = 1
         return True
     # check if min wins
-    # elif(checkDiagonal(n.table,n.lastX,n.lastY,0) or checkHorizontal(n.table,n.lastX,n.lastY,0) or checkVertical(n.table,n.lastX,n.lastY,0)):
-    elif checkHorizontal(n.table, n.lastX, n.lastY, 0) or checkVertical(n.table, n.lastX, n.lastY, 0):
+    elif(checkDiagonal(n.table,n.lastX,n.lastY,0) or checkHorizontal(n.table,n.lastX,n.lastY,0) or checkVertical(n.table,n.lastX,n.lastY,0)):
         n.utility = -1
         return True
     # no winner or game is over
@@ -145,7 +146,7 @@ def TerminalTest(n):
 # returns a minimax value 0 for no utility, 1 for max utility, -1 for min ustility
 
 def minimax(state):
-    optimal = min_value(state)
+    optimal = max_value(state, alpha, beta)
     for child in state.children:
         if child.utility == optimal:
             print (child.lastX)
@@ -162,9 +163,12 @@ def max_value(state):
     state.utility = -maxsize
     state.CreateChildren()
     for child in state.children:
-        optimal = min_value(child)
+        optimal = min_value(child, alpha, beta)
         if (optimal >= state.utility):
             state.utility = optimal
+        if state.utility >= beta:
+            return state.utility
+        alpha = max(alpha, state.utility)
     # utility = max(min_value(child))
     return state.utility
 
@@ -176,9 +180,12 @@ def min_value(state):
     state.utility = maxsize
     state.CreateChildren()
     for child in state.children:
-        optimal = max_value(child)
+        optimal = max_value(child, alpha, beta)
         if optimal <= state.utility:
             state.utility = optimal
+        if state.utility <= alpha:
+            return state.utility
+        beta = min(beta, state.utility)
     # utility = min(max_value(node.children.value))
     return state.utility
 
@@ -258,11 +265,11 @@ def main():
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
 
-        for v in range(len(global_table)):
-            for h in range(len(global_table)):
+      #  for v in range(len(global_table)):
+      #      for h in range(len(global_table)):
+      #          print ((current_state.table[v][h]), end=" ")
 
-                print ((current_state.table[v][h]), end=" ")
-            print ("")
+       #     print ("")
 
             # current_state.CreateChildren()
             # print ("child.lastX = " + str(current_state.children[1].lastX))
