@@ -9,8 +9,8 @@ from sys import maxsize
 
 depth = 225  # number of boxes on the table 15^15
 global_table = [[-1] * 15 for _ in range(15)]  # list to maintain the position of tha table, initialized to empty values
-ascii = 65  # initialises ascii counter
-groupname = "WeWillSee"
+asciiletter = 65  # initialises ascii counter
+groupname = "gomoku.py"
 turnFile = groupname + ".go"
 letters = {}  # converts letters to numbers
 alpha = -maxsize
@@ -29,7 +29,7 @@ class Node:
         self.table = [[-1] * 15 for _ in range(15)]  # to keep track of all the possible moves
         self.children = []  # link nodes to the nodes
         self.utility = self.getValue()  # initialises to zero
-        self.CreateChildren()
+        #self.CreateChildren()
 
     def CreateChildren(self):
         if self.depth > 0:
@@ -56,7 +56,7 @@ class Node:
 def checkHorizontal(table, last_moveX, last_moveY, player):
     counter = 1
     cX = 1
-    while cX < 5 and counter <= 5:
+    while cX < 5 or counter <= 5:
         if last_moveX + cX < 14:
             if table[last_moveX + cX][last_moveY] == player:
                 counter = counter + 1
@@ -72,7 +72,7 @@ def checkHorizontal(table, last_moveX, last_moveY, player):
 def checkVertical(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
-    while cY < 5 and counter <= 5:
+    while cY < 5 or counter <= 5:
         if last_moveY + cY < 15:
             if table[last_moveX][last_moveY + cY] == player:
                 counter = counter + 1
@@ -89,7 +89,7 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
     counter = 1
     cY = 1
     cX = 1
-    while cY < 5 and cX < 5 and counter <= 5:
+    while cY < 5 or cX < 5 or counter <= 5:
         # diagonal up right
         if last_moveX + cX < 15 and last_moveY - cY >= 0:
             if table[last_moveX + cX][last_moveY - cY] == player:
@@ -116,12 +116,11 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
 # # This function is supposed to find if the state is a win a loose or a draw
 def TerminalTest(n):
     # check if max wins
-    if (checkDiagonal(n.table, n.lastX, n.lastY, 1) or checkHorizontal(n.table, n.lastX, n.lastY, 1) or checkVertical(
-            n.table, n.lastX, n.lastY, 1)):
+    if (checkDiagonal(n.table, n.lastX, n.lastY, 1) or checkHorizontal(n.table, n.lastX, n.lastY, 1) or checkVertical(n.table, n.lastX, n.lastY, 1)):
         n.utility = 1
         return True
     # check if min wins
-    elif(checkDiagonal(n.table,n.lastX,n.lastY,0) or checkHorizontal(n.table,n.lastX,n.lastY,0) or checkVertical(n.table,n.lastX,n.lastY,0)):
+    elif(checkDiagonal(n.table,n.lastX,n.lastY,0) or checkHorizontal(n.table,n.lastX,n.lastY,0) or checkVertical(n.table,n.lastX,n.lastY,0)):  
         n.utility = -1
         return True
     # no winner or game is over
@@ -139,7 +138,7 @@ def TerminalTest(n):
 # returns a minimax value 0 for no utility, 1 for max utility, -1 for min ustility
 
 def minimax(state):
-    optimal = max_value(state, alpha, beta)
+    optimal = min_value(state, alpha, beta)
     for child in state.children:
         if child.utility == optimal:
             result = [child.lastX, child.lastY]
@@ -150,7 +149,7 @@ def max_value(state, alpha, beta):
     if TerminalTest(state):
         return state.utility
     state.utility = -maxsize
-    #state.CreateChildren()
+    state.CreateChildren()
     for child in state.children:
         optimal = min_value(child, alpha, beta)
         if optimal >= state.utility:
@@ -165,7 +164,7 @@ def min_value(state, alpha, beta):
     if TerminalTest(state):
         return state.utility
     state.utility = maxsize
-    #state.CreateChildren()
+    state.CreateChildren()
     for child in state.children:
         optimal = max_value(child, alpha, beta)
         if optimal <= state.utility:
@@ -180,14 +179,14 @@ def min_value(state, alpha, beta):
 # #FUNCTIONS
 
 def write_move(x, y):
-	global depth
     global_table[x][y] = 1  # updates global table
+    global depth 
     file = open("move_file", 'w')
     for n in letters:
         if letters[n] == y:
             file.writelines([groupname, ' ', n, ' ', str(x)])
             file.close()
-    depth -= 1
+    depth = depth - 1
 
 
 # This function check if the game ended
@@ -219,12 +218,12 @@ def eval_func(n, x, y):
 # ###############################################
 # MAIN FUNCTION
 def main():
-    global ascii
+    global asciiletter
     global depth
 
     for i in range(15):
-        letters[chr(ascii)] = i  # assigns value to dictionary
-        ascii = ascii + 1  # increments the ascii counter
+        letters[chr(asciiletter)] = i  # assigns value to dictionary
+        asciiletter = asciiletter + 1  # increments the ascii counter
 
     while True:
         # if not our turn and no end_game, then do nothing
@@ -244,22 +243,21 @@ def main():
                 opponent_move = line.split()
             print("Opponent Move: ", opponent_move)
             depth = depth - 1
-            opp_col = letters[opponent_move[1]]
-            opp_row = int(opponent_move[2])
-            global_table[opp_col][opp_row] = 0  # enemy move ###############.occupied
+            #opp_col = letters[opponent_move[1]]
+            #opp_row = int(opponent_move[2])
+            global_table[letters[opponent_move[1]]][int(opponent_move[2])] = 0  # enemy move ###############.occupied
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
         else:
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
             write_move(8, 8)
-            break
+            continue
 
         for v in range(len(global_table)):
-           for h in range(len(global_table)):
-            print (current_state.table[v][h]),  # end=" ")
-
-        print ("\n")
+            for h in range(len(global_table)):
+                print (current_state.table[v][h]),  # end=" ")
+            print ("\n")
 
         # current_state.CreateChildren()
         # print ("child.lastX = " + str(current_state.children[1].lastX))
@@ -269,7 +267,6 @@ def main():
         print ("My Move", best_move)
         write_move(best_move[0], best_move[1])
 
-        depth = depth - 1
 
         print ("finished moving")
 
