@@ -4,8 +4,8 @@ import os
 import sys
 from sys import maxsize
 
-##==========================================================================================
-## GLOBAL VARIABLES
+# #==========================================================================================
+# # GLOBAL VARIABLES
 
 depth = 225  # number of boxes on the table 15^15
 global_table = [[-1] * 15 for _ in range(15)]  # list to maintain the position of tha table, initialized to empty values
@@ -15,10 +15,10 @@ turnFile = groupname + ".go"
 letters = {}  # converts letters to numbers
 
 
-##==========================================================================================
-##OBJECTS
+# #==========================================================================================
+# #OBJECTS
 
-class Node():
+class Node:
     def __init__(self, depth, player):
         self.depth = depth  # depth at which the node is at in tree
         self.player = player  # 0 = opponent, 1 = our agent
@@ -42,10 +42,10 @@ class Node():
                         self.children.append(new)
 
     def getValue(self):
-        if (self.player == 0):
-            self.utility = -maxsize
+        if self.player == 0:
+            return -maxsize
         else:
-            self.utility = maxsize
+            return maxsize
 
 
 class TableBox:
@@ -57,11 +57,11 @@ class TableBox:
 
 # =============================================================================================
 #
-## THE FOLLOWING FUNCTIONS WILL DETERMINE IF THERE ARE 5 ADJACENT PIECES, EITHER DIAGONALLY VERTICALLY OR HORIZONTALLY
+# # THE FOLLOWING FUNCTIONS WILL DETERMINE IF THERE ARE 5 ADJACENT PIECES, EITHER DIAGONALLY VERTICALLY OR HORIZONTALLY
 def checkHorizontal(table, last_moveX, last_moveY, player):
     counter = 1
     cX = 1
-    while (cX < 5 and counter <= 5):
+    while cX < 5 and counter <= 5:
         if last_moveX + cX < 14:
             if table[last_moveX + cX][last_moveY] == player:
                 counter = counter + 1
@@ -118,7 +118,7 @@ def checkDiagonal(table, last_moveX, last_moveY, player):
     return counter == 5
 
 
-## This function is supposed to find if the state is a win a loose or a draw
+# # This function is supposed to find if the state is a win a loose or a draw
 def TerminalTest(n):
     # check if max wins
     if (checkDiagonal(n.table, n.lastX, n.lastY, 1) or checkHorizontal(n.table, n.lastX, n.lastY, 1) or checkVertical(
@@ -157,13 +157,13 @@ def minimax(state):
 
 def max_value(state):
     # state.CreateChildren()
-    if (TerminalTest(state)):
+    if TerminalTest(state):
         return state.utility
     state.utility = -maxsize
     state.CreateChildren()
     for child in state.children:
         optimal = min_value(child)
-        if (optimal >= state.utility):
+        if optimal >= state.utility:
             state.utility = optimal
     # utility = max(min_value(child))
     return state.utility
@@ -171,7 +171,7 @@ def max_value(state):
 
 def min_value(state):
     # state.CreateChildren()
-    if (TerminalTest(state)):
+    if TerminalTest(state):
         return state.utility
     state.utility = maxsize
     state.CreateChildren()
@@ -221,7 +221,7 @@ def eval_func(n, x, y):
     pass
 
 
-##=============================================================================================
+# ###############################################
 # MAIN FUNCTION
 def main():
     global ascii
@@ -229,50 +229,46 @@ def main():
 
     for i in range(15):
         letters[chr(ascii)] = i  # assigns value to dictionary
-        ascii = ascii + 1  # incrememts the ascii counter
+        ascii = ascii + 1  # increments the ascii counter
 
-    while (True):
+    while True:
         # if not our turn and no end_game, then do nothing
         while wait_for_turn() and check_end():
             pass
 
         # breaks the while loop if game ends
-        if check_end() == False:
+        if not check_end():
             print ("Game has ended")
             break
 
         # parsing the the move_file, reads the opponent's move
         file = open("move_file", 'r')
-        for line in file:
-            opponent_move = line.split()
-
-        print(opponent_move)
-
-        if not opponent_move:
+        if os.path.getsize("move_file") > 0:
+            for line in file:
+                opponent_move = line.split()
+            print("Opponent Move: ", opponent_move)
+            depth = depth - 1
+            opp_col = letters[opponent_move[1]]
+            opp_row = int(opponent_move[2])
+            global_table[opp_col][opp_row] = 0  # enemy move ###############.occupied
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
         else:
-            depth = depth - 1
-            global_table[letters[opponent_move[1]]][
-                int(opponent_move[2]) - 1] = 0;  # enemy move ###############.occupied
             current_state = Node(depth, 1)  # root node of tree
             current_state.table = global_table
 
         for v in range(len(global_table)):
             for h in range(len(global_table)):
 
-                print ((current_state.table[v][h]), end=" ")
-
-                print (current_state.table[v][h]),  # end=" "
-
-            print ("")
+                print (current_state.table[v][h]),  # end=" ")
+            print ("\n")
 
             # current_state.CreateChildren()
             # print ("child.lastX = " + str(current_state.children[1].lastX))
 
-        best_move = []
         best_move = minimax(current_state)
-        print (best_move)
+        # best_move = [0,1]
+        print ("My Move", best_move)
         write_move(best_move[0], best_move[1])
 
         depth = depth - 1
